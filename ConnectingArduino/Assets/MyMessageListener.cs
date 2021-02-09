@@ -4,7 +4,9 @@ using UnityEngine;
 public class MyMessageListener : MonoBehaviour
 {
     [SerializeField]
-    GameObject spinner;
+    GameObject plierA;
+    [SerializeField]
+    GameObject plierB;
     // Use this for initialization
     void Start()
     {
@@ -18,7 +20,11 @@ public class MyMessageListener : MonoBehaviour
     {
         Debug.Log("Arrived: " + msg);
         //spinner.transform.Translate(Vector3.forward * Time.deltaTime * float.Parse(msg) * 10);
-        spinner.transform.Rotate(0f, Time.deltaTime * float.Parse(msg) * 10, 0f, Space.World);
+        //spinner.transform.Rotate(0f, Time.deltaTime * float.Parse(msg) * 10, 0f, Space.World);
+        plierA.transform.eulerAngles = new Vector3(0, -Mathf.Log(float.Parse(msg)) * 200, 0);
+        plierB.transform.eulerAngles = new Vector3(0, Mathf.Log(float.Parse(msg)) * 200, 0);
+        //spinner.transform.eulerAngles = new Vector3(0f, Time.deltaTime * float.Parse(msg), 0f);
+
     }
     // Invoked when a connect/disconnect event occurs. The parameter 'success'
     // will be 'true' upon connection, and 'false' upon disconnection or

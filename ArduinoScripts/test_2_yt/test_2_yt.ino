@@ -2,10 +2,7 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#include <Adafruit_SSD1306.h>
 
-#define OLED_RESET 4
-Adafruit_SSD1306 display(OLED_RESET);
  
 Servo myservo;  
 
@@ -19,7 +16,9 @@ int maxDegrees;
 int minFeedback;
 int maxFeedback;
 int tolerance = 2; // max feedback measurement error
-
+int reading = 0;
+int minimum = 2000;
+int maximum = 0;
 
 void calibrate(Servo servo, int analogPin, int minPos, int maxPos)
 {
@@ -40,12 +39,14 @@ void calibrate(Servo servo, int analogPin, int minPos, int maxPos)
  
 void setup() 
 { 
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); 
-  Serial.begin(115200);
+  Serial.begin(9600);
   
   myservo.attach(servoPin); 
   
   calibrate(myservo, feedbackPin, 0, 270);  // calibrate for the 20-270 degree range
+  
+  pinMode(feedbackPin, INPUT);
+
  
   displayPosition(); 
     
@@ -54,49 +55,23 @@ void setup()
 void loop()
 {
 
-  delay(3000);
-  myservo.write(0);
-  delay(2000);
-  displayPosition(); 
-
-  delay(3000);
-  myservo.write(90);
-  delay(2000);
   displayPosition();
-
-
-  delay(3000);
-  myservo.write(180);
-  delay(2000);
-  displayPosition();
-
-  delay(3000);
-  myservo.write(270);
-  delay(2000);
-  displayPosition(); 
   
   
 }
-int getPos(int analogPin)
-{
-  return abs(map(analogRead(analogPin), minFeedback, maxFeedback, minDegrees, maxDegrees));
-}
+
 void displayPosition()
 {
   
-  
-   display.clearDisplay();
-
-  // text display tests
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  display.setCursor(0,0);
-  display.println("Position");
-  
-  display.setTextSize(4);
-  display.setTextColor(WHITE);
-  display.setCursor(10,30);
-  display.println( getPos(feedbackPin) );
-  display.display();
+  reading = abs(map(analogRead(feedbackPin), minFeedback, maxFeedback, minDegrees, maxDegrees));
+  //reading = analogRead(feedbackPin);
+  if(reading < minimum) minimum = reading;
+  if(reading > maximum) maximum = reading;
+  //if (reading < 0) reading = 0;
+  //if (reading > 360) reading = 360;
+  // Serial.println("Position");
+  Serial.println( reading );
+  //Serial.print(minimum);
+  //Serial.println(maximum);
   
 }
