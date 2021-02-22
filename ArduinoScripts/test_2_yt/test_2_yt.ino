@@ -43,7 +43,7 @@ void setup()
   
   myservo.attach(servoPin); 
   
-  calibrate(myservo, feedbackPin, 0, 270);  // calibrate for the 20-270 degree range
+  calibrate(myservo, feedbackPin, 0, 30);  // calibrate for the 20-270 degree range
   
   pinMode(feedbackPin, INPUT);
 
@@ -58,13 +58,14 @@ void loop()
   displayPosition();
   
   
+  
 }
 
 void displayPosition()
 {
   
-  reading = abs(map(analogRead(feedbackPin), minFeedback, maxFeedback, minDegrees, maxDegrees));
-  //reading = analogRead(feedbackPin);
+  //reading = abs(map(analogRead(feedbackPin), minFeedback, maxFeedback, minDegrees, maxDegrees));
+  reading = analogRead(feedbackPin);
   if(reading < minimum) minimum = reading;
   if(reading > maximum) maximum = reading;
   //if (reading < 0) reading = 0;
@@ -73,5 +74,7 @@ void displayPosition()
   Serial.println( reading );
   //Serial.print(minimum);
   //Serial.println(maximum);
+  //delay(2000);
+  //myservo.write(reading);
   
 }

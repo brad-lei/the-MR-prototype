@@ -7,9 +7,14 @@ public class MyMessageListener : MonoBehaviour
     GameObject plierA;
     [SerializeField]
     GameObject plierB;
+    float initialPosition = 0;
+    Vector3 initialRotation;
+
+
     // Use this for initialization
     void Start()
     {
+        
     }
     // Update is called once per frame
     void Update()
@@ -18,11 +23,30 @@ public class MyMessageListener : MonoBehaviour
     // Invoked when a line of data is received from the serial device.
     void OnMessageArrived(string msg)
     {
-        Debug.Log("Arrived: " + msg);
+        float servoPosition = float.Parse(msg);
+
+        Debug.Log(servoPosition);
         //spinner.transform.Translate(Vector3.forward * Time.deltaTime * float.Parse(msg) * 10);
         //spinner.transform.Rotate(0f, Time.deltaTime * float.Parse(msg) * 10, 0f, Space.World);
-        plierA.transform.eulerAngles = new Vector3(0, -Mathf.Log(float.Parse(msg)) * 200, 0);
-        plierB.transform.eulerAngles = new Vector3(0, Mathf.Log(float.Parse(msg)) * 200, 0);
+        //if (initialPosition == 0)
+        //{
+        //    initialPosition = servoPosition;
+        //    initialRotation = new Vector3(0, -Mathf.Log(initialPosition) * 200, 0);
+        //    plierA.transform.eulerAngles = initialRotation;
+        //    plierB.transform.eulerAngles = initialRotation * (1, -1, 1);
+        //}
+        //else
+        //{
+
+        //}
+        //jitters a lot
+        //plierA.transform.eulerAngles = new Vector3(0, -Mathf.Log(float.Parse(msg)) * 200, 0);
+        //plierB.transform.eulerAngles = new Vector3(0, Mathf.Log(float.Parse(msg)) * 200, 0);
+
+        plierA.transform.eulerAngles = new Vector3(0, -Mathf.Floor(servoPosition / 100) * 3, 0);
+        plierB.transform.eulerAngles = new Vector3(0, Mathf.Floor(servoPosition / 100) * 3, 0);
+
+
         //spinner.transform.eulerAngles = new Vector3(0f, Time.deltaTime * float.Parse(msg), 0f);
 
     }
